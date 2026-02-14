@@ -1,0 +1,498 @@
+{
+	"info": {
+		"_postman_id": "544790f1-6eed-4864-9b9b-15d304105828",
+		"name": "Bug Bounty Platform API",
+		"description": "Complete API documentation for Bug Bounty Platform.\n\n**Base URL:** `http://localhost:5544`\n\n## Features\n\n- User Authentication (Company & Developer roles)\n    \n- Bug Management (Create, List, View)\n    \n- Solution Submission System\n    \n- Approve/Reject Workflow\n    \n- Balance Management\n    \n\n## Testing Flow\n\n1. Register Company → Add Balance\n    \n2. Create Bug with bounty\n    \n3. Register Developer → Submit Solution\n    \n4. Company: Approve/Reject\n    \n5. Check balances updated\n    \n\n## Authentication\n\nMost endpoints require Bearer token in Authorization header.  \nGet token from Register/Login responses.\n\n## Roles\n\n- **Company:** Can post bugs, add balance, approve/reject solutions\n    \n- **Developer**: Can submit solutions and earn bounties",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35587072"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register Developer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"vishal\",\n  \"email\": \"developer@vishal88.com\",\n  \"password\": \"vishal\",\n  \"role\": \"developer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Google Inc\",\n  \"email\": \"google@company.com\",\n  \"password\": \"123456\",\n  \"role\": \"company\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Company)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxNDc0ZTc0ZjI1NWE0ZjlkNjM2ZCIsImlhdCI6MTc3MTA1MDEwMCwiZXhwIjoxNzcxMTM2NTAwfQ.jl1xXgqyNh_x97hTg395NINm0NYVomvVQA6dB77Soog",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"google@company.com\",\n  \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Developer)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxYmM3NmRjOTQxNzdhYzlmN2FiYiIsImlhdCI6MTc3MTA1MTk3NSwiZXhwIjoxNzcxMTM4Mzc1fQ.tFniZl-Yzdn9cELhFzuvEHT_5dq7rqF4xl-Rkx1Auw4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"developer@vishal88.com\",\n  \"password\": \"vishal\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxNDc0ZTc0ZjI1NWE0ZjlkNjM2ZCIsImlhdCI6MTc3MTA1MDE2NCwiZXhwIjoxNzcxMTM2NTY0fQ.EycbyasHNPUO14J1ycpE7WAcEJbzy3_hnNkh_tWRnFY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"_id\": \"69901474e74f255a4f9d636d\",\n  \"name\": \"Google Inc\",\n  \"email\": \"google@company.com\",\n  \"role\": \"company\",\n  \"balance\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/auth/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxNDc0ZTc0ZjI1NWE0ZjlkNjM2ZCIsImlhdCI6MTc3MTA1MDE2NCwiZXhwIjoxNzcxMTM2NTY0fQ.EycbyasHNPUO14J1ycpE7WAcEJbzy3_hnNkh_tWRnFY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/auth/add-balance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"add-balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bugs",
+			"item": [
+				{
+					"name": "Get All Bugs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5544/api/bugs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"bugs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bug",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxNDc0ZTc0ZjI1NWE0ZjlkNjM2ZCIsImlhdCI6MTc3MTA1MDE2NCwiZXhwIjoxNzcxMTM2NTY0fQ.EycbyasHNPUO14J1ycpE7WAcEJbzy3_hnNkh_tWRnFY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"SQL Injection in Login Page\",\n  \"description\": \"The login page is vulnerable to SQL injection attacks. Users can bypass authentication by entering special SQL characters in username field.\",\n  \"bounty_amount\": 2500\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/bugs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"bugs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Bug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5544/api/bugs/699017f36dc94177ac9f7a94",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"bugs",
+								"699017f36dc94177ac9f7a94"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Submissions",
+			"item": [
+				{
+					"name": "Submit Solution (Developer)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxM2FiZTc0ZjI1NWE0ZjlkNjM2YSIsImlhdCI6MTc3MTA1MTIwNSwiZXhwIjoxNzcxMTM3NjA1fQ.f3_8fo0Irl8FyxaiYcCtzu8Png6gEDBBbt_ZIcu5Dc8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bug_id\": \"699017f36dc94177ac9f7a94\",\n  \"solution_description\": \"Identified a Broken Access Control vulnerability where the 'userID' could be manipulated in the URL. I have implemented a server-side check to verify that the requesting user's JWT ID matches the resources being accessed. Added a middleware to validate ownership before data retrieval.\",\n  \"proof_link\": \"https://github.com/dev/vulnerability-lab/pull/12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/bugs/submit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"bugs",
+								"submit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Submissions for Bug",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5544/api/submissions/bug/699017f36dc94177ac9f7a94",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"submissions",
+								"bug",
+								"699017f36dc94177ac9f7a94"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Submission (Company)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxNDc0ZTc0ZjI1NWE0ZjlkNjM2ZCIsImlhdCI6MTc3MTA1MDE2NCwiZXhwIjoxNzcxMTM2NTY0fQ.EycbyasHNPUO14J1ycpE7WAcEJbzy3_hnNkh_tWRnFY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5544/api/submissions/approve/699019136dc94177ac9f7a9c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"submissions",
+								"approve",
+								"699019136dc94177ac9f7a9c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Developer Balance (After Approval)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxM2FiZTc0ZjI1NWE0ZjlkNjM2YSIsImlhdCI6MTc3MTA1MTIwNSwiZXhwIjoxNzcxMTM3NjA1fQ.f3_8fo0Irl8FyxaiYcCtzu8Png6gEDBBbt_ZIcu5Dc8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5544/api/auth/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Submission (Optional Test)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTAxNDc0ZTc0ZjI1NWE0ZjlkNjM2ZCIsImlhdCI6MTc3MTA1MDE2NCwiZXhwIjoxNzcxMTM2NTY0fQ.EycbyasHNPUO14J1ycpE7WAcEJbzy3_hnNkh_tWRnFY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5544/api/submissions/reject/69901b086dc94177ac9f7ab2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5544",
+							"path": [
+								"api",
+								"submissions",
+								"reject",
+								"69901b086dc94177ac9f7ab2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
