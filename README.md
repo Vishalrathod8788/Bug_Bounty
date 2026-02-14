@@ -126,7 +126,7 @@ npm start
 node server.js
 ```
 
-Server will run on `http://localhost:5000`
+Server will run on `http://localhost:5544`
 
 ### Frontend Setup
 
