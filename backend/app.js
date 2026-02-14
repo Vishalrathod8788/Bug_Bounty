@@ -2,33 +2,92 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import cors from "cors";
+
 import authRoutes from "./routes/authRoutes.js";
 import bugRoutes from "./routes/bugRoutes.js";
 import submissionRoutes from "./routes/submissionRoutes.js";
 
 const app = express();
-
-// Middleware
-app.use(express.json());
-app.use(cors());
-
-// Basic Route
-app.get("/", (req, res) => {
-  res.send("Bug Bounty API is running...");
-});
-app.use("/api/auth", authRoutes); // Authentication related routes
-app.use("/api/bugs", bugRoutes); // Bug related routes
-app.use("/api/submissions", submissionRoutes); // Submission related routes
-
 const PORT = process.env.PORT || 5000;
 
-// Database Connection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("MongoDB Connected");
-    app.listen(PORT, () =>
-      console.log(`Server started on http://localhost:${PORT}`),
-    );
-  })
-  .catch((err) => console.log(err));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Local development
+      "https://bug-bounty-frontend.vercel.app", // Production frontend
+      process.env.FRONTEND_URL, // Custom frontend URL
+    ].filter(Boolean),
+    credentials: true,
+  }),
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) {
+    console.log("=> Using existing database connection");
+    return;
+  }
+
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    isConnected = true;
+    console.log("✅ MongoDB Connected Successfully");
+  } catch (error) {
+    console.error("❌ MongoDB Connection Error:", error.message);
+    throw error;
+  }
+};
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({
+      error: "Database connection failed",
+      message: error.message,
+    });
+  }
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Bug Bounty API is running...",
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api/bugs", bugRoutes);
+app.use("/api/submissions", submissionRoutes);
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    path: req.path,
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({
+    error: "Internal server error",
+    message: err.message,
+  });
+});
+
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
