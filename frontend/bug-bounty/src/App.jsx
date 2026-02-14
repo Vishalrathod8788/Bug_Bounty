@@ -9,6 +9,8 @@ import BugDetail from './components/BugDetail';
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
+console.log(import.meta.env.VITE_API_URL);
+
 function AppContent() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
