@@ -7,8 +7,7 @@ import Dashboard from './components/Dashboard';
 import CompanyAccount from './components/CompanyAccount';
 import BugDetail from './components/BugDetail';
 
-// API Base URL - Backend address
-export const API_URL = 'https://bug-bounty-chi.vercel.app/api';
+export const API_URL = import.meta.env.VITE_API_URL;
 
 function AppContent() {
   const [user, setUser] = useState(null);
