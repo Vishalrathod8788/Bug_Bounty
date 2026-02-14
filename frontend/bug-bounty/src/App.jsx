@@ -8,7 +8,7 @@ import CompanyAccount from './components/CompanyAccount';
 import BugDetail from './components/BugDetail';
 
 // API Base URL - Backend address
-export const API_URL = 'http://localhost:5544/api';
+export const API_URL = 'https://bug-bounty-chi.vercel.app/api';
 
 function AppContent() {
   const [user, setUser] = useState(null);

@@ -13,11 +13,13 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Local development
-      "https://bug-bounty-frontend.vercel.app", // Production frontend
-      process.env.FRONTEND_URL, // Custom frontend URL
+      "http://localhost:5173",
+      "https://bug-bounty-frontend.vercel.app",
+      process.env.FRONTEND_URL,
     ].filter(Boolean),
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
@@ -33,10 +35,7 @@ const connectDB = async () => {
   }
 
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
     isConnected = true;
     console.log("✅ MongoDB Connected Successfully");
   } catch (error) {
