@@ -14,7 +14,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://bug-bounty-rh1r.vercel.app/",
+      "https://bug-bounty-rh1r.vercel.app",
       process.env.FRONTEND_URL,
     ].filter(Boolean),
     credentials: true,
